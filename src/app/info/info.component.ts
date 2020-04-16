@@ -12,18 +12,13 @@ import {AuthenticationService} from '../services/authentication.service';
   styleUrls: ['./info.component.scss']
 })
 export class InfoComponent implements OnInit {
-  private username = '';
-  private email = '';
-  private id = '';
-  private users = [];
-  private url = 'http://85.160.64.233:3000/user';
-  private url2 = 'http://85.160.64.233:3000/session/logout';
 
   constructor(private http: HttpClient, private router: Router, private http2: HttpClient, private user: UserService, private authentication: AuthenticationService) {
 
     this.user.haloooooo().subscribe(
         (data: UserModel) => {
             this.users = data['users'];
+          this.page_count = data.page_count + 1;
         }, (error) => {
 
         }
@@ -31,25 +26,38 @@ export class InfoComponent implements OnInit {
 
   }
 
+  get pageCount(): IterableIterator<number> {
+    return new Array(this.page_count).keys();
+  }
+  private username = '';
+  private email = '';
+  private id = '';
+  private users = [];
+  private url = 'http://85.160.64.233:3000/user';
+  private url2 = 'http://85.160.64.233:3000/session/logout';
+  // tslint:disable-next-line:variable-name
+  private page_count: number;
+
+
+  myStorage = window.localStorage;
+
   clickProfile(id: number) {
     this.router.navigate(['/koment'],  {queryParams: {id}});
   }
 
-  runLogOut() {
-
-    this.authentication
-    .smazToken()
-    .subscribe(
-      (data: any) => {
-       AuthenticationService.token.access_token = '';
-       console.log(Key.access);
+  getCislo(page: number) {
+    this.user.getStranka(page).subscribe(
+      (data: UserModel) => {
+        this.users = data['users'];
+        this.page_count = data.page_count + 1;
       }, (error) => {
+
       }
-    );
+    );;
   }
 
-
-  ngOnInit() {
+  runLogOut() {
+    localStorage.clear();
   }
 
 }

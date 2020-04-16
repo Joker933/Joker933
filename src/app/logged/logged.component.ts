@@ -14,16 +14,7 @@ export class LoggedComponent implements OnInit {
   private url2 = 'http://85.160.64.233:3000/session/logout';
 
   runLogOut() {
-
-    this.authentication
-      .smazToken()
-      .subscribe(
-        (data: any) => {
-          AuthenticationService.token.access_token = "";
-          console.log(Key.access);
-        }, (error) => {
-        }
-      );
+    localStorage.clear();
   }
 
   constructor(private http: HttpClient, private router: Router, private http2: HttpClient, private authentication: AuthenticationService) { }
